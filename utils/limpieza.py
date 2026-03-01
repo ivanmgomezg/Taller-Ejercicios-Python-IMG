@@ -3,14 +3,18 @@
 # ==================================================================================
 
 import pandas as pd
+from thefuzz import process
 import unicodedata
+import re
 
 def normalizar_texto(df, columnas):
     """
     Limpia y normaliza columnas de texto en un DataFrame.
     - Elimina espacios al inicio y al final
-    - Convierte todo a minúsculas
+    - Convierte a minúsculas
     - Elimina tildes y caracteres especiales
+    - Elimina números
+    - Elimina cualquier caracter que no sea letra o espacio
 
     Parámetros:
         df (DataFrame): El DataFrame a limpiar
@@ -28,6 +32,10 @@ def normalizar_texto(df, columnas):
             # Quitamos tildes y caracteres especiales
             texto = unicodedata.normalize('NFD', texto)
             texto = texto.encode('ascii', 'ignore').decode('utf-8')
+            # Quitamos números
+            texto = ''.join([c for c in texto if not c.isdigit()])
+            # Quitamos cualquier caracter que no sea letra o espacio
+            texto = re.sub(r'[^a-zA-Z\s]', '', texto)
         return texto
 
     for columna in columnas:
@@ -60,3 +68,31 @@ def detectar_anomalias(df, columna):
     print(f"  Tildes                     : {tildes}")
     print(f"  Números                    : {numeros}")
     print(f"  Caracteres especiales      : {especiales}")
+
+
+    
+
+def corregir_ciudades(df, columna, umbral=60):
+    """
+    Corrige ciudades mal escritas comparándolas contra la lista de ciudades válidas.
+    Usa fuzzy matching para encontrar la ciudad más parecida.
+
+    Parámetros:
+        df (DataFrame): El DataFrame a corregir
+        columna (str): Nombre de la columna de ciudades
+        umbral (int): Porcentaje mínimo de similitud para aceptar la corrección (0-100)
+
+    Retorna:
+        DataFrame: El DataFrame con las ciudades corregidas
+    """
+    # Tomamos las ciudades más frecuentes como referencia (las válidas)
+    ciudades_validas = df[columna].value_counts().head(20).index.tolist()
+
+    def corregir(ciudad):
+        resultado = process.extractOne(ciudad, ciudades_validas)
+        if resultado and resultado[1] >= umbral:
+            return resultado[0]
+        return ciudad
+
+    df[columna] = df[columna].apply(corregir)
+    return df

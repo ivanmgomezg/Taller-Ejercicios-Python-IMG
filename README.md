@@ -1,3 +1,34 @@
+## Requisitos
+
+Este proyecto usa un entorno virtual de Python. Para configurarlo:
+
+### 1. Crear el entorno virtual
+```bash
+python -m venv .venv
+```
+
+### 2. Activar el entorno virtual
+```bash
+# Linux / macOS
+source .venv/bin/activate
+
+# Windows
+.venv\Scripts\activate
+```
+
+### 3. Instalar dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Ejecutar un ejercicio
+```bash
+python soluciones/01.py
+```
+
+> Asegúrate de ejecutar los scripts siempre desde la raíz del proyecto y con el entorno virtual activado.
+
+
 # Taller de Python - Manejo y Limpieza de Datos
 
 ## Infraestructura para Grandes Volúmenes de Datos
