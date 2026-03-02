@@ -159,7 +159,7 @@ A continuación se listan los 30 ejercicios. **Debe escribir el valor exacto de 
 | 03 | ¿Cuántas veces aparece el nombre "Juan" en el dataset? | `3.986` |
 | 04 | ¿Cuál es el nombre más frecuente y cuántas veces aparece? | `Gonzalo - 4.221` |
 | 05 | ¿Cuál es el apellido más frecuente y cuántas veces aparece? | `Reyes - 7.490` |
-| 06 | ¿Cuántos registros tienen la ciudad "Bogota" después de limpiar? | `PENDIENTE` |
+| 06 | ¿Cuántos registros tienen la ciudad "Bogota" después de limpiar? | `14.969` |
 | 07 | ¿Cuántos registros tienen la ciudad "Medellin" después de limpiar? | `PENDIENTE` |
 | 08 | ¿Cuántas ciudades únicas existen después de normalizar? | `PENDIENTE` |
 | 09 | ¿Cuántos registros tienen la profesión "Ingeniero" después de limpiar? | `PENDIENTE` |
