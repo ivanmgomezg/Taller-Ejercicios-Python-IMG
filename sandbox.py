@@ -1,4 +1,6 @@
+# ==================================================================================
 # sandbox.py - archivo de pruebas y experimentos, no forma parte de las soluciones
+# ==================================================================================
 
 import sys
 import os
@@ -7,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 import utils.conexion as conexion
 import utils.limpieza as limp
 import pandas as pd
-from thefuzz import process, fuzz
+from thefuzz import process, fuzz # para fuzzy matching en corrección de texto
 
 # ------------------------------------------------------------------------------
 # Pruebas validar normalizacion columas texto
@@ -236,5 +238,38 @@ def pruebas_col_booleana(df, col_analizar):
 
 
 
+# ------------------------------------------------------------------------------
+# Pruebas validar email
+# ------------------------------------------------------------------------------
+def pruebas_col_email(df, col_analizar):
+    print("=" * 50)
+    print(f"ANTES de limpiar '{col_analizar}'")
+    print("=" * 50)
+    print(f"  Nulos   : {df[col_analizar].isna().sum()}")
+    print(f"  Muestra :\n{df[col_analizar].head(10)}")
+
+    df = limp.normalizar_email(df, col_analizar)
+
+    print(f"\nDESPUÉS de limpiar '{col_analizar}'")
+    print("=" * 50)
+    print(f"  Válidos  : {df[col_analizar].notna().sum()}")
+    print(f"  Inválidos: {df[col_analizar].isna().sum()}")
+    print(f"  Total    : {len(df)}")
+    print(f"\n  Muestra :\n{df[col_analizar].head(10)}")
+# ------------------------------------------------------------------------------
+
+
+# Ejecutar la prueba
 df = conexion.cargar_datos_csv("personas.csv")
-pruebas_col_booleana(df,"activo")   
+df_cls = limp.limpiar_dataset(df)
+print(df_cls.head(20))
+
+
+"""
+pruebas_col_texto(df,"ciudad")
+pruebas_col_texto(df,"profesion")
+pruebas_col_numero(df,"salario")
+pruebas_col_fecha(df,"fecha_nacimiento")
+pruebas_col_email(df,"email")
+pruebas_col_booleana(df,"activo")
+"""

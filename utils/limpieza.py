@@ -2,10 +2,15 @@
 # Módulo de limpieza y normalización de datos
 # ==================================================================================
 
+import codecs
 import pandas as pd
-from thefuzz import process, fuzz
-import unicodedata
+import numpy as np
 import re
+import unicodedata
+from thefuzz import process, fuzz
+
+# Configuración de visualización de números
+pd.set_option('display.float_format', lambda x: f'{x:.0f}')
 
 def normalizar_texto(df, columnas):
     """
@@ -123,62 +128,166 @@ def detectar_anomalias_numericas(df, columna):
     print(f"  Caracteres no numéricos: {no_numericos}")
 
 
-def normalizar_numericos(df, columnas):
+def normalizar_moneda(df, columnas):
     """
-    Limpia y normaliza columnas numéricas en un DataFrame.
-    - Elimina caracteres no numéricos excepto el punto decimal
+    Limpia y normaliza columnas de tipo moneda en un DataFrame.
+    - Elimina texto antes del primer número. Ejemplo: aprox.3781750 → 3781750
+    - Maneja formatos con puntos de miles y comas decimales. Ejemplo: 1.250,50
+    - Elimina símbolos de moneda, letras y caracteres especiales
+    - Maneja múltiples puntos decimales por error. Ejemplo: 1.250.500
     - Convierte la columna a tipo numérico
     - Reemplaza valores negativos por nulo
 
     Parámetros:
         df (DataFrame): El DataFrame a limpiar
-        columnas (list): Lista de columnas a normalizar. Ejemplo: ['salario', 'edad']
+        columnas (list): Lista de columnas a normalizar. Ejemplo: ['salario', 'precio']
 
     Retorna:
         DataFrame: El DataFrame con las columnas normalizadas
     """
-    def limpiar(valor):
-        if isinstance(valor, str):
-            # Quitamos todo excepto números y punto decimal
-            valor = re.sub(r'[^0-9.]', '', valor)
-        return valor
+    def limpiar_valor(valor):
+        if pd.isna(valor):
+            return np.nan
+
+        # Convertimos a string y limpiamos espacios
+        valor_str = str(valor).strip().lower()
+
+        # Eliminamos texto antes del primer número. Ejemplo: aprox.3781750 → 3781750
+        valor_str = re.sub(r'^[^0-9]*', '', valor_str)
+
+        # Si después de limpiar no queda nada retornamos nulo
+        if not valor_str:
+            return np.nan
+
+        # Caso 1: puntos de miles y coma decimal. Ejemplo: 1.250,50
+        if '.' in valor_str and ',' in valor_str:
+            valor_str = valor_str.replace('.', '')
+            valor_str = valor_str.replace(',', '.')
+
+        # Caso 2: solo coma decimal. Ejemplo: 1250,50
+        elif ',' in valor_str:
+            valor_str = valor_str.replace(',', '.')
+
+        # Quitamos todo excepto números y punto decimal
+        valor_limpio = re.sub(r'[^0-9.]', '', valor_str)
+
+        # Si quedaron múltiples puntos dejamos solo el último
+        if valor_limpio.count('.') > 1:
+            partes = valor_limpio.split('.')
+            valor_limpio = "".join(partes[:-1]) + "." + partes[-1]
+
+        if not valor_limpio or valor_limpio == '.':
+            return np.nan
+
+        return valor_limpio
+
+    df_resultado = df.copy()
 
     for columna in columnas:
-        df[columna] = df[columna].apply(limpiar)
-        # Convertimos a numérico, los que no se puedan convertir quedan como nulo
-        df[columna] = pd.to_numeric(df[columna], errors='coerce')
-        # Reemplazamos negativos por nulo
-        df[columna] = df[columna].where(df[columna] >= 0, other=pd.NA)
+        if columna in df_resultado.columns:
+            df_resultado[columna] = df_resultado[columna].apply(limpiar_valor)
+            # Convertimos a numérico, los que no se puedan convertir quedan como nulo
+            df_resultado[columna] = pd.to_numeric(df_resultado[columna], errors='coerce')
+            # Los salarios negativos no son válidos
+            df_resultado.loc[df_resultado[columna] < 0, columna] = np.nan
 
+    return df_resultado
+
+
+def normalizar_identificadores(df, columnas):
+    """
+    Limpia y normaliza columnas de identidad (IDs) en un DataFrame.
+    - Maneja casos como '145,00' convirtiéndolos en '145'.
+    - Elimina texto como 'aprox.' o símbolos como '@', '#', '[]'.
+    - Convierte a tipo 'Int64' (Entero con soporte para nulos).
+    """
+    
+    if isinstance(columnas, str):
+        columnas = [columnas]
+
+    def limpiar_valor_individual(valor):
+        if pd.isna(valor):
+            return None
+        
+        # 1. Convertimos a string y limpiamos espacios
+        texto = str(valor).strip().lower()
+        
+        # 2. Manejo de decimales accidentales:
+        # Si tiene una coma (como 145,00), nos quedamos solo con lo de la izquierda
+        texto = texto.split(',')[0]
+        
+        # 3. REGEX: Borramos todo lo que NO sea un número
+        # Esto quita el punto de 'aprox.', los corchetes, etc.
+        texto_limpio = re.sub(r'[^0-9]', '', texto)
+        
+        return texto_limpio if texto_limpio != '' else None
+
+    for col in columnas:
+        if col in df.columns:
+            # Aplicamos la limpieza fila por fila
+            df[col] = df[col].apply(limpiar_valor_individual)
+            
+            # Convertimos a numérico y luego a Int64
+            df[col] = pd.to_numeric(df[col], errors='coerce').astype('Int64')
+    
     return df
 
 
 def normalizar_fechas(df, columna):
     """
-    Limpia y normaliza una columna de fechas en un DataFrame.
-    - Reemplaza separadores alternativos (puntos, barras) por guiones
-    - Elimina caracteres no numéricos excepto el guión
-    - Convierte la columna a tipo fecha
-    - Valores que no se puedan convertir quedan como nulo
+    Limpia y normaliza una columna de fechas con formatos ruidosos.
+    - Elimina espacios accidentales (ej: '19 92' -> '1992').
+    - Estandariza separadores no convencionales (. / \).
+    - Remueve símbolos de ruido como '??', '~', '@', '%'.
+    - Convierte el resultado al tipo de dato datetime de Pandas.
 
     Parámetros:
-        df (DataFrame): El DataFrame a limpiar
-        columna (str): Nombre de la columna de fechas
+        df (DataFrame): El DataFrame a procesar.
+        columna (str): El nombre de la columna de fechas (ej: 'fecha_nacimiento').
 
     Retorna:
-        DataFrame: El DataFrame con la columna de fechas normalizada
+        DataFrame: El DataFrame con la columna convertida a objetos datetime.
     """
-    def limpiar(valor):
-        if isinstance(valor, str):
-            # Reemplazamos separadores alternativos por guión
-            valor = re.sub(r'[./\\]', '-', valor)
-            # Quitamos todo excepto números y guión
-            valor = re.sub(r'[^0-9-]', '', valor)
-        return valor
+    
+    def limpiar_fecha_string(valor):
+        """
+        Función interna para sanear strings individuales antes de la conversión.
+        """
+        # Si el valor ya es nulo (NaN/None), no intentamos procesarlo
+        if pd.isna(valor): 
+            return None
+        
+        # Convertimos a string y eliminamos espacios exteriores
+        texto = str(valor).strip()
+        
+        # 1. Corrección de espacios internos:
+        # Algunos registros vienen como '20 01-10-19'. Al quitar el espacio,
+        # recuperamos el año correcto '2001-10-19'.
+        texto = texto.replace(" ", "")
+        
+        # 2. Homogeneización de separadores:
+        # Usamos regex para cambiar cualquier punto (.), barra (/) o diagonal inversa (\)
+        # por un guion (-), unificando el formato a 'YYYY-MM-DD'.
+        texto = re.sub(r'[./\\]', '-', texto)
+        
+        # 3. Limpieza de caracteres residuales (Regex):
+        # El patrón [^0-9-] busca cualquier cosa que NO sea un número del 0-9 o un guion.
+        # Esto elimina de forma masiva los '??', '~', '@', '%', etc.
+        texto = re.sub(r'[^0-9-]', '', texto)
+        
+        return texto
 
-    df[columna] = df[columna].apply(limpiar)
-    df[columna] = pd.to_datetime(df[columna], errors='coerce')
-
+    # Verificamos la existencia de la columna para evitar errores de ejecución
+    if columna in df.columns:
+        # Fase 1: Aplicamos la limpieza de texto celda por celda
+        df[columna] = df[columna].apply(limpiar_fecha_string)
+        
+        # Fase 2: Conversión a tipo Datetime nativo de Pandas
+        # - dayfirst=False: Prioriza el formato ISO (Año primero), típico de este dataset.
+        # - errors='coerce': Si una fecha es lógica pero imposible (ej: 2023-02-30),
+        #   la convierte en NaT (Not a Time) en lugar de detener el script con un error.
+        df[columna] = pd.to_datetime(df[columna], errors='coerce')
+        
     return df
 
 
@@ -199,11 +308,10 @@ def normalizar_email(df, columna):
     """
     def limpiar(valor):
         if isinstance(valor, str):
-            # Quitamos espacios y convertimos a minúsculas
             valor = valor.strip().lower()
-            # Eliminamos caracteres extraños alrededor del email
+            # Eliminamos prefijo mailto: si existe
+            valor = re.sub(r'^mailto:', '', valor)
             valor = re.sub(r'[^\w\.\@\-\+]', '', valor)
-            # Si no tiene formato válido de email lo marcamos como nulo
             if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', valor):
                 return pd.NA
         return valor
@@ -258,12 +366,17 @@ def limpiar_dataset(df):
     Notas:
         - ciudad: umbral 60, nombres largos y reconocibles
         - profesion: umbral 45, palabras más cortas requieren menor umbral
-    """
+    """    
+    df = normalizar_identificadores(df, 'id')
+
+    df['nombre_cifrado'] = df['nombre_cifrado'].apply(lambda x: codecs.decode(x, 'rot13'))
+    df['apellido_cifrado'] = df['apellido_cifrado'].apply(lambda x: codecs.decode(x, 'rot13'))
+
     df = normalizar_texto(df, ['ciudad', 'profesion'])
     df = corregir_fuzzy(df, 'ciudad', umbral=70)
     df = corregir_fuzzy(df, 'profesion', umbral=80)
     df = normalizar_email(df, 'email')
     df = normalizar_fechas(df, 'fecha_nacimiento')
-    df = normalizar_numericos(df, ['salario'])
-    df = normalizar_booleanos(df, 'activo')
+    df = normalizar_moneda(df, ['salario'])
+    df = normalizar_booleanos(df, 'activo')    
     return df
