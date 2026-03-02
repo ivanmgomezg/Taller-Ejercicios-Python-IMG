@@ -17,6 +17,6 @@ df_clean = limp.limpiar_dataset(df) # Limpiamos los datos utilizando la función
 
 # Contamos cuántos registros tienen la ciudad "Bogota" en la columna "ciudad"
 ciudad = 'bogota'
-conteo_ciudad = df_clean[df_clean["ciudad"] == ciudad].shape[0]
+conteo_ciudad = df_clean[df_clean["ciudad"] == ciudad.lower()].shape[0]
 
 print(f"El número de registros con la ciudad '{ciudad.capitalize()}' es: {conteo_ciudad}")
