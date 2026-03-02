@@ -46,7 +46,7 @@ def normalizar_texto(df, columnas):
 
 def detectar_anomalias_texto(df, columna):
     """
-    Detecta y cuenta valores con caracteres anómalos en una columna.
+    Detecta y cuenta valores con caracteres anómalos en una columna de texto.
     - Espacios al inicio o al final
     - Tildes o caracteres especiales
     - Números dentro del texto
@@ -54,9 +54,6 @@ def detectar_anomalias_texto(df, columna):
     Parámetros:
         df (DataFrame): El DataFrame a analizar
         columna (str): Nombre de la columna a revisar
-
-    Retorna:
-        dict: Resumen con conteos de cada tipo de anomalía
     """
     espacios = df[columna].str.match(r'^\s|\s$').sum()
     tildes = df[columna].str.contains(r'[áéíóúÁÉÍÓÚüÜñÑ]', regex=True).sum()
@@ -70,12 +67,10 @@ def detectar_anomalias_texto(df, columna):
     print(f"  Caracteres especiales      : {especiales}")
 
 
-    
-
-def corregir_txt(df, columna, umbral=45):
+def corregir_fuzzy(df, columna, umbral=45):
     """
-    Corrige texto mal escritas comparándolas contra la lista de texto válidas.
-    Usa fuzzy matching para encontrar la ciudad más parecida.
+    Corrige valores mal escritos comparándolos contra los más frecuentes.
+    Usa fuzzy matching para encontrar el valor más parecido.
 
     Parámetros:
         df (DataFrame): El DataFrame a corregir
@@ -83,9 +78,9 @@ def corregir_txt(df, columna, umbral=45):
         umbral (int): Porcentaje mínimo de similitud para aceptar la corrección (0-100)
 
     Retorna:
-        DataFrame: El DataFrame con las textos corregidas
+        DataFrame: El DataFrame con los valores corregidos
     """
-    # Tomamos las campos más frecuentes como referencia (las válidas)
+    # Tomamos los campos más frecuentes como referencia (los válidos)
     texto_valido = df[columna].value_counts().head(20).index.tolist()
 
     def corregir(texto):
@@ -114,8 +109,8 @@ def detectar_anomalias_numericas(df, columna):
     no_numericos = pd.to_numeric(df[columna], errors='coerce').isna().sum() - nulos
 
     print(f"Anomalías detectadas en '{columna}':")
-    print(f"  Valores nulos         : {nulos}")
-    print(f"  Valores negativos     : {negativos}")
+    print(f"  Valores nulos          : {nulos}")
+    print(f"  Valores negativos      : {negativos}")
     print(f"  Caracteres no numéricos: {no_numericos}")
 
 
@@ -178,7 +173,6 @@ def normalizar_fechas(df, columna):
     return df
 
 
-
 def normalizar_email(df, columna):
     """
     Limpia y normaliza una columna de emails en un DataFrame.
@@ -239,4 +233,28 @@ def normalizar_booleanos(df, columna):
         return valor
 
     df[columna] = df[columna].apply(limpiar)
+    return df
+
+
+def limpiar_dataset(df):
+    """
+    Aplica toda la limpieza y normalización al dataset completo.
+
+    Parámetros:
+        df (DataFrame): El DataFrame a limpiar
+
+    Retorna:
+        DataFrame: El DataFrame completamente limpio
+
+    Notas:
+        - ciudad: umbral 60, nombres largos y reconocibles
+        - profesion: umbral 45, palabras más cortas requieren menor umbral
+    """
+    df = normalizar_texto(df, ['ciudad', 'profesion'])
+    df = corregir_fuzzy(df, 'ciudad', umbral=60)
+    df = corregir_fuzzy(df, 'profesion', umbral=45)
+    df = normalizar_email(df, 'email')
+    df = normalizar_fechas(df, 'fecha_nacimiento')
+    df = normalizar_numericos(df, ['salario'])
+    df = normalizar_booleanos(df, 'activo')
     return df
