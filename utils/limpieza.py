@@ -3,7 +3,7 @@
 # ==================================================================================
 
 import pandas as pd
-from thefuzz import process
+from thefuzz import process, fuzz
 import unicodedata
 import re
 
@@ -67,24 +67,33 @@ def detectar_anomalias_texto(df, columna):
     print(f"  Caracteres especiales      : {especiales}")
 
 
-def corregir_fuzzy(df, columna, umbral=45):
+def corregir_fuzzy(df, columna, umbral=80, min_frecuencia=1000):
     """
     Corrige valores mal escritos comparándolos contra los más frecuentes.
-    Usa fuzzy matching para encontrar el valor más parecido.
+    Usa fuzzy matching con token_set_ratio para mejor detección de palabras
+    con letras faltantes o transpuestas.
 
     Parámetros:
         df (DataFrame): El DataFrame a corregir
         columna (str): Nombre de la columna
         umbral (int): Porcentaje mínimo de similitud para aceptar la corrección (0-100)
+        min_frecuencia (int): Frecuencia mínima para considerar un valor como válido
 
     Retorna:
         DataFrame: El DataFrame con los valores corregidos
     """
-    # Tomamos los campos más frecuentes como referencia (los válidos)
-    texto_valido = df[columna].value_counts().head(20).index.tolist()
+    
+    conteo = df[columna].value_counts()
+    texto_valido = conteo[conteo > min_frecuencia].index.tolist()
 
     def corregir(texto):
-        resultado = process.extractOne(texto, texto_valido)
+        texto = str(texto).strip().lower()
+
+        if texto in texto_valido:
+            return texto
+
+        resultado = process.extractOne(texto, texto_valido, scorer=fuzz.token_set_ratio)
+
         if resultado and resultado[1] >= umbral:
             return resultado[0]
         return texto
@@ -251,8 +260,8 @@ def limpiar_dataset(df):
         - profesion: umbral 45, palabras más cortas requieren menor umbral
     """
     df = normalizar_texto(df, ['ciudad', 'profesion'])
-    df = corregir_fuzzy(df, 'ciudad', umbral=60)
-    df = corregir_fuzzy(df, 'profesion', umbral=45)
+    df = corregir_fuzzy(df, 'ciudad', umbral=70)
+    df = corregir_fuzzy(df, 'profesion', umbral=80)
     df = normalizar_email(df, 'email')
     df = normalizar_fechas(df, 'fecha_nacimiento')
     df = normalizar_numericos(df, ['salario'])
