@@ -1,0 +1,21 @@
+# ==================================================================================
+# Ejercicio 10
+# ¿Cuántos registros tienen la profesión "Programador" después de limpiar?
+# ==================================================================================
+
+# Importamos las librerias necesarias
+import sys
+import os
+# Le decimos a Python dónde está la raíz del proyecto
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import utils.limpieza as limp
+import utils.conexion as conexion
+
+df = conexion.cargar_datos_csv("personas.csv")
+df_clean = limp.limpiar_dataset(df) # Limpiamos los datos utilizando la función
+
+# Contamos cuántos registros tienen la profesión "Ingeniero" después de limpiar
+profesion = 'Programador'
+conteo = df_clean[df_clean["profesion"] == profesion.lower()].shape[0]
+print(f"El número de registros con la profesión '{profesion.capitalize()}' después de limpiar es: {conteo}")
