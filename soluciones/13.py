@@ -1,6 +1,6 @@
 # ==================================================================================
-# Ejercicio 12
-# ¿Cuántos registros tienen el campo email con espacios adicionales?
+# Ejercicio 13
+# ¿Cuántos registros tienen el campo `salario` con caracteres no numéricos?
 # ==================================================================================
 
 # Importamos las librerias necesarias
@@ -13,5 +13,6 @@ import utils.limpieza as limp
 import utils.conexion as conexion
 
 df = conexion.cargar_datos_csv("personas.csv")
-contar = df["email"].str.contains(" ").sum()
-print("Número de registros con espacios adicionales en el campo email: ", contar)
+contar = df["salario"].str.contains("[^0-9]").sum()
+print("Número de registros con caracteres no numéricos en el campo salario:", contar)
+
