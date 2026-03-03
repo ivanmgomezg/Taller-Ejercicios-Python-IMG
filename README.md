@@ -26,6 +26,8 @@ pip install -r requirements.txt
 python soluciones/01.py
 ```
 
+> ⚠️ **Importante:** Asegúrate de que el entorno virtual esté activado antes de ejecutar cualquier script. Si ves un error de `KeyboardInterrupt` al importar pandas, activa el entorno con `source .venv/bin/activate` y vuelve a ejecutar.
+
 > Asegúrate de ejecutar los scripts siempre desde la raíz del proyecto y con el entorno virtual activado.
 
 
@@ -170,7 +172,7 @@ A continuación se listan los 30 ejercicios. **Debe escribir el valor exacto de 
 | 14 | ¿Cuál es el salario promedio después de limpiar? | `$ 7,818,765.11` |
 | 15 | ¿Cuál es el salario máximo después de limpiar? | `14,999,952` |
 | 16 | ¿Cuál es el salario mínimo después de limpiar? | `1,000,032` |
-| 17 | ¿Cuántos registros tienen `activo` como verdadero después de normalizar? | `PENDIENTE` |
+| 17 | ¿Cuántos registros tienen `activo` como verdadero después de normalizar? | `149.863` |
 | 18 | ¿Cuántos registros tienen `activo` como falso después de normalizar? | `PENDIENTE` |
 | 19 | ¿Cuántos registros tienen fecha de nacimiento con formato diferente a YYYY-MM-DD? | `PENDIENTE` |
 | 20 | ¿Cuántas personas nacieron entre 1990 y 2000 (inclusive)? | `PENDIENTE` |
