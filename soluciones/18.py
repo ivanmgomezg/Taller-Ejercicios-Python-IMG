@@ -1,6 +1,6 @@
 # ==================================================================================
-# Ejercicio 17
-# ¿Cuántos registros tienen `activo` como verdadero después de normalizar?
+# Ejercicio 18
+# ¿Cuántos registros tienen `activo` como falso después de normalizar?
 # ==================================================================================
 
 # Importamos las librerias necesarias
@@ -15,6 +15,6 @@ import utils.conexion as conexion
 df = conexion.cargar_datos_csv("personas.csv")
 df_clean = limp.limpiar_dataset(df) # Limpiamos los datos utilizando la función
 
-# Contamos cuántos registros tienen 'activo' como verdadero
-registros = df_clean[df_clean["activo"] == True].shape[0]
-print(f"El número de registros con 'activo' como verdadero después de normalizar es: {registros}")
+# Contamos cuántos registros tienen 'activo' como falso
+registros = df_clean[df_clean["activo"] == False].shape[0]
+print(f"El número de registros con 'activo' como falso después de normalizar es: {registros}")

@@ -169,11 +169,11 @@ A continuación se listan los 30 ejercicios. **Debe escribir el valor exacto de 
 | 11 | ¿Cuántas profesiones únicas existen después de normalizar? | `25` |
 | 12 | ¿Cuántos registros tienen el campo `email` con espacios adicionales? | `45.447` |
 | 13 | ¿Cuántos registros tienen el campo `salario` con caracteres no numéricos? | `85.266` |
-| 14 | ¿Cuál es el salario promedio después de limpiar? | `$ 7,818,765.11` |
-| 15 | ¿Cuál es el salario máximo después de limpiar? | `14,999,952` |
-| 16 | ¿Cuál es el salario mínimo después de limpiar? | `1,000,032` |
+| 14 | ¿Cuál es el salario promedio después de limpiar? | `$ 7.818.765,11` |
+| 15 | ¿Cuál es el salario máximo después de limpiar? | `14.999.952` |
+| 16 | ¿Cuál es el salario mínimo después de limpiar? | `1.000.032` |
 | 17 | ¿Cuántos registros tienen `activo` como verdadero después de normalizar? | `149.863` |
-| 18 | ¿Cuántos registros tienen `activo` como falso después de normalizar? | `PENDIENTE` |
+| 18 | ¿Cuántos registros tienen `activo` como falso después de normalizar? | `150.137` |
 | 19 | ¿Cuántos registros tienen fecha de nacimiento con formato diferente a YYYY-MM-DD? | `PENDIENTE` |
 | 20 | ¿Cuántas personas nacieron entre 1990 y 2000 (inclusive)? | `PENDIENTE` |
 | 21 | ¿Cuántas personas nacieron antes de 1960? | `PENDIENTE` |
