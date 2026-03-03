@@ -130,13 +130,15 @@ def detectar_anomalias_numericas(df, columna):
 
 def normalizar_moneda(df, columnas):
     """
-    Limpia y normaliza columnas de tipo moneda en un DataFrame.
-    - Elimina texto antes del primer número. Ejemplo: aprox.3781750 → 3781750
+    ...
+    - Detecta y extrae números después de prefijos de texto. Ejemplo: aprox.10001178 -> 10001178
+    - Remplaza letras similares a números (l->1, o->0)
+    - Elimina símbolos de moneda y caracteres especiales. Ejemplo: $, @, [, ]
     - Maneja formatos con puntos de miles y comas decimales. Ejemplo: 1.250,50
-    - Elimina símbolos de moneda, letras y caracteres especiales
     - Maneja múltiples puntos decimales por error. Ejemplo: 1.250.500
     - Convierte la columna a tipo numérico
     - Reemplaza valores negativos por nulo
+    ...
 
     Parámetros:
         df (DataFrame): El DataFrame a limpiar
@@ -152,10 +154,18 @@ def normalizar_moneda(df, columnas):
         # Convertimos a string y limpiamos espacios
         valor_str = str(valor).strip().lower()
 
-        # Eliminamos texto antes del primer número. Ejemplo: aprox.3781750 → 3781750
-        valor_str = re.sub(r'^[^0-9]*', '', valor_str)
+        # Caso especial: texto seguido de punto y número. Ejemplo: aprox.10001178
+        # Tomamos directamente lo que está después del punto
+        match = re.search(r'[a-z]+\.(\d+)', valor_str)
+        if match:
+            return match.group(1)
 
-        # Si después de limpiar no queda nada retornamos nulo
+        # Reemplazamos letras similares a números
+        valor_str = valor_str.replace('l', '1').replace('o', '0')
+
+        # Eliminamos símbolos al inicio y al final
+        valor_str = re.sub(r'^[^0-9]+|[^0-9]+$', '', valor_str)
+
         if not valor_str:
             return np.nan
 
@@ -237,7 +247,7 @@ def normalizar_fechas(df, columna):
     """
     Limpia y normaliza una columna de fechas con formatos ruidosos.
     - Elimina espacios accidentales (ej: '19 92' -> '1992').
-    - Estandariza separadores no convencionales (. / \).
+    - Estandariza separadores no convencionales.
     - Remueve símbolos de ruido como '??', '~', '@', '%'.
     - Convierte el resultado al tipo de dato datetime de Pandas.
 

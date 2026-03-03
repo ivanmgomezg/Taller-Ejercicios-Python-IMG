@@ -261,9 +261,8 @@ def pruebas_col_email(df, col_analizar):
 
 # Ejecutar la prueba
 df = conexion.cargar_datos_csv("personas.csv")
-df_cls = limp.limpiar_dataset(df)
-print(df_cls.head(20))
-
+df_clean = limp.limpiar_dataset(df)
+print(df_clean.head(20))
 
 """
 pruebas_col_texto(df,"ciudad")
