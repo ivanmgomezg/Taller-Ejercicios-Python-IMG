@@ -174,8 +174,8 @@ A continuación se listan los 30 ejercicios. **Debe escribir el valor exacto de 
 | 16 | ¿Cuál es el salario mínimo después de limpiar? | `1.000.032` |
 | 17 | ¿Cuántos registros tienen `activo` como verdadero después de normalizar? | `149.863` |
 | 18 | ¿Cuántos registros tienen `activo` como falso después de normalizar? | `150.137` |
-| 19 | ¿Cuántos registros tienen fecha de nacimiento con formato diferente a YYYY-MM-DD? | `PENDIENTE` |
-| 20 | ¿Cuántas personas nacieron entre 1990 y 2000 (inclusive)? | `PENDIENTE` |
+| 19 | ¿Cuántos registros tienen fecha de nacimiento con formato diferente a YYYY-MM-DD? | `89.823` |
+| 20 | ¿Cuántas personas nacieron entre 1990 y 2000 (inclusive)? | `53.404` |
 | 21 | ¿Cuántas personas nacieron antes de 1960? | `PENDIENTE` |
 | 22 | ¿Cuántas personas tienen más de 50 años (fecha actual: 2026-02-26)? | `PENDIENTE` |
 | 23 | ¿Cuántos registros tienen nombre "Carlos" y viven en "Cali"? | `PENDIENTE` |

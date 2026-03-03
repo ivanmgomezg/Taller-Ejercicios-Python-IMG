@@ -272,20 +272,3 @@ pruebas_col_fecha(df,"fecha_nacimiento")
 pruebas_col_email(df,"email")
 pruebas_col_booleana(df,"activo")
 """
-
-
-
-df_temp = conexion.cargar_datos_csv("personas.csv")
-
-# Detectamos los diferentes formatos de fecha antes de limpiar
-formato_yyyymmdd = df_temp['fecha_nacimiento'].str.match(r'^\d{4}-\d{2}-\d{2}$', na=False).sum()
-formato_ddmmyyyy = df_temp['fecha_nacimiento'].str.match(r'^\d{2}-\d{2}-\d{4}$', na=False).sum()
-otros = len(df_temp) - formato_yyyymmdd - formato_ddmmyyyy
-
-print(f"Formato YYYY-MM-DD : {formato_yyyymmdd}")
-print(f"Formato DD-MM-YYYY : {formato_ddmmyyyy}")
-print(f"Otros formatos     : {otros}")
-print(f"Total              : {len(df_temp)}")
-
-print(df_temp.tail(50))
-print(df_temp.head(50))
