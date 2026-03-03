@@ -1,5 +1,5 @@
 # ==================================================================================
-# Módulo de limpieza y normalización de datos
+# Módulo de limpieza, normalización y transformación de datos
 # ==================================================================================
 
 import codecs
@@ -7,10 +7,17 @@ import pandas as pd
 import numpy as np
 import re
 import unicodedata
+import codecs #Para la decodificación ROT13
 from thefuzz import process, fuzz
 
 # Configuración de visualización de números
 pd.set_option('display.float_format', lambda x: f'{x:.0f}')
+
+
+#Defino una función para decodificar el texto usando ROT13
+def rot13(texto): 
+    return codecs.decode(texto, "rot13")
+
 
 def normalizar_texto(df, columnas):
     """

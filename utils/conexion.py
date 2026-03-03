@@ -1,3 +1,7 @@
+# ==================================================================================
+# Módulo de conexión y carga de datos
+# ==================================================================================
+
 #Importamos las librerias necesarias para el trabajo con datos
 import pandas as pd 
 import numpy as np

@@ -12,14 +12,14 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Importamos el módulo de conexión y otros desde la carpeta utils para cargar los datos
 import utils.conexion as conexion
-import utils.transformaciones as transf
+import utils.limpieza as limp
 
 # Cargamos el CSV en un DataFrame para poder manipularlo
 df = conexion.cargar_datos_csv("personas.csv") 
 
 # -------------------------------------------------------
 
-df["apellido_cifrado"] = df["apellido_cifrado"].apply(lambda x: transf.rot13(x)) #Decodificamos la columna "apellido_cifrado" usando ROT13 para obtener los nombres reales 
+df["apellido_cifrado"] = df["apellido_cifrado"].apply(lambda x: limp.rot13(x)) #Decodificamos la columna "apellido_cifrado" usando ROT13 para obtener los nombres reales 
 
 
 # Contamos la frecuencia de cada nombre en la columna "apellido_cifrado"

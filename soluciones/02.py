@@ -12,7 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Importamos el módulo de conexión y otros desde la carpeta utils para cargar los datos
 import utils.conexion as conexion
-import utils.transformaciones as transf
+import utils.limpieza as limp
 
 # Cargamos el CSV en un DataFrame para poder manipularlo
 df = conexion.cargar_datos_csv("personas.csv") 
@@ -20,7 +20,7 @@ df = conexion.cargar_datos_csv("personas.csv")
 # -------------------------------------------------------
 
 #Decodificamos la columna "nombre_cifrado" usando ROT13 para obtener los nombres reales 
-df["nombre_cifrado"] = df["nombre_cifrado"].apply(lambda x: transf.rot13(x)) 
+df["nombre_cifrado"] = df["nombre_cifrado"].apply(lambda x: limp.rot13(x)) 
 
 # Nombre que queremos buscar en el dataset
 nom_buscar = "Maria" 
