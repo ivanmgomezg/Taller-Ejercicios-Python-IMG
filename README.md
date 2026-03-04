@@ -184,7 +184,7 @@ A continuación se listan los 30 ejercicios. **Debe escribir el valor exacto de 
 | 26 | ¿Cuántos registros tienen ciudad "Barranquilla", activos y nacidos después de 1980? | `3.241` |
 | 27 | ¿Cuál es la ciudad con más "Ingenieros"? | `Popayan, 640 Ingenieros` |
 | 28 | ¿Cuál es la profesión con el salario promedio más alto? | `Biologo, 807.351,86` |
-| 29 | ¿Cuántos registros tienen email con dominio "gmail.com"? | `PENDIENTE` |
+| 29 | ¿Cuántos registros tienen email con dominio "gmail.com"? | `60.000` |
 | 30 | ¿Cuántos registros tienen nombre "Jose" y apellido "Garcia"? | `PENDIENTE` |
 
 ---
