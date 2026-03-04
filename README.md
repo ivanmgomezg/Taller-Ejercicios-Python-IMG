@@ -170,7 +170,7 @@ A continuación se listan los 30 ejercicios. **Debe escribir el valor exacto de 
 | 12 | ¿Cuántos registros tienen el campo `email` con espacios adicionales? | `45.447` |
 | 13 | ¿Cuántos registros tienen el campo `salario` con caracteres no numéricos? | `85.266` |
 | 14 | ¿Cuál es el salario promedio después de limpiar? | `$ 8,005,689,17` |
-| 15 | ¿Cuál es el salario máximo después de limpiar? | `14.999.952` |
+| 15 | ¿Cuál es el salario máximo después de limpiar? | `14.999.995` |
 | 16 | ¿Cuál es el salario mínimo después de limpiar? | `1.000.032` |
 | 17 | ¿Cuántos registros tienen `activo` como verdadero después de normalizar? | `149.863` |
 | 18 | ¿Cuántos registros tienen `activo` como falso después de normalizar? | `150.137` |
@@ -182,8 +182,8 @@ A continuación se listan los 30 ejercicios. **Debe escribir el valor exacto de 
 | 24 | ¿Cuántos registros tienen nombre "Ana" y son "Medico"? | `172` |
 | 25 | ¿Cuántos registros tienen profesión "Abogado" y salario > 10,000,000? | `4.405` |
 | 26 | ¿Cuántos registros tienen ciudad "Barranquilla", activos y nacidos después de 1980? | `3.241` |
-| 27 | ¿Cuál es la ciudad con más "Ingenieros"? | `Popayan, 640 Ingenieros` |
-| 28 | ¿Cuál es la profesión con el salario promedio más alto? | `Biologo, 807.351,86` |
+| 27 | ¿Cuál es la ciudad con más "Ingenieros"? | `Popayán, 640 Ingenieros` |
+| 28 | ¿Cuál es la profesión con el salario promedio más alto? | `Biologo, 8.073.516,86` |
 | 29 | ¿Cuántos registros tienen email con dominio "gmail.com"? | `60.000` |
 | 30 | ¿Cuántos registros tienen nombre "Jose" y apellido "Garcia"? | `96` |
 
