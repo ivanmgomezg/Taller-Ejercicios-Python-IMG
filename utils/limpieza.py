@@ -385,10 +385,9 @@ def limpiar_dataset(df):
         - profesion: umbral 45, palabras más cortas requieren menor umbral
     """    
     df = normalizar_identificadores(df, 'id')
-
     df['nombre_cifrado'] = df['nombre_cifrado'].apply(lambda x: codecs.decode(x, 'rot13'))
     df['apellido_cifrado'] = df['apellido_cifrado'].apply(lambda x: codecs.decode(x, 'rot13'))
-
+    df = normalizar_texto(df, ['nombre_cifrado', 'apellido_cifrado'])
     df = normalizar_texto(df, ['ciudad', 'profesion'])
     df = corregir_fuzzy(df, 'ciudad', umbral=70)
     df = corregir_fuzzy(df, 'profesion', umbral=80)

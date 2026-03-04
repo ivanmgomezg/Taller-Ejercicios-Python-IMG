@@ -3,21 +3,28 @@
 # ==================================================================================
 import pandas as pd
 
-def contar_con_filtros(df, **filtros):
+def filtrar(df, **filtros):
     """
-    Cuenta registros que cumplen múltiples condiciones.
+    Filtra el DataFrame según múltiples condiciones de igualdad.
+    La comparación es insensible a mayúsculas y minúsculas.
 
     Parámetros:
         df (DataFrame): El DataFrame a filtrar
         **filtros: Condiciones como pares columna=valor
 
     Ejemplo:
-        contar_con_filtros(df, ciudad='cali', nombre_cifrado='carlos')
+        filtrar(df, ciudad='Cali', nombre_cifrado='Carlos')
 
     Retorna:
-        int: Número de registros que cumplen todas las condiciones
+        DataFrame: El DataFrame filtrado
     """
-    mask = pd.Series([True] * len(df), index=df.index)
+    df = df.copy()
     for columna, valor in filtros.items():
-        mask &= df[columna] == valor
-    return mask.sum()
+        # Verificamos si la columna es de tipo texto (object o str)
+        if pd.api.types.is_string_dtype(df[columna]):
+            # Comparamos en minúsculas para ignorar mayúsculas
+            df = df[df[columna].str.lower() == str(valor).lower()]
+        else:
+            # Para columnas numéricas o booleanas comparamos directamente
+            df = df[df[columna] == valor]
+    return df
