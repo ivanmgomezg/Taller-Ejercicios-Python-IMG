@@ -19,4 +19,4 @@ df = conexion.cargar_datos_csv("personas.csv") # Cargamos el CSV en un DataFrame
 
 id_no_num = (~df["id"].str.isnumeric()).sum() #En esta variable almaceno la cantidad de id que no(~) son numericos
 
-print(f"De las 300.000 filas hay {id_no_num} filas con id que contienen caracteres no numéricos, lo que equivale al {(83648/300000)*100:.2f}% de todos los datos")
+print(f"De las 300.000 filas hay {id_no_num} filas con id que contienen caracteres no numéricos")

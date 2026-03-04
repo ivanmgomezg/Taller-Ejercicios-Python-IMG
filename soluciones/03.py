@@ -21,7 +21,7 @@ df = conexion.cargar_datos_csv("personas.csv")
 
 
 # Decodificamos la columna "nombre_cifrado" usando ROT13 para obtener los nombres reales 
-df["nombre_cifrado"] = df["nombre_cifrado"].apply(lambda x: limp.rot13(x)) 
+df["nombre_cifrado"] = df["nombre_cifrado"].apply(limp.rot13) 
 
 # Nombre que queremos buscar en el dataset
 nom_buscar = "Juan" 

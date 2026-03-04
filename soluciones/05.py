@@ -19,8 +19,8 @@ df = conexion.cargar_datos_csv("personas.csv")
 
 # -------------------------------------------------------
 
-df["apellido_cifrado"] = df["apellido_cifrado"].apply(lambda x: limp.rot13(x)) #Decodificamos la columna "apellido_cifrado" usando ROT13 para obtener los nombres reales 
-
+#Decodificamos la columna "apellido_cifrado" usando ROT13 para obtener los nombres reales 
+df["apellido_cifrado"] = df["apellido_cifrado"].apply(limp.rot13) 
 
 # Contamos la frecuencia de cada nombre en la columna "apellido_cifrado"
 conteo = df["apellido_cifrado"].value_counts() 

@@ -6,7 +6,6 @@
 # Importamos las librerias necesarias
 import sys
 import os
-from datetime import datetime
 
 # Le decimos a Python dónde está la raíz del proyecto
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
