@@ -178,9 +178,9 @@ A continuación se listan los 30 ejercicios. **Debe escribir el valor exacto de 
 | 20 | ¿Cuántas personas nacieron entre 1990 y 2000 (inclusive)? | `53.404` |
 | 21 | ¿Cuántas personas nacieron antes de 1960? | `66.577` |
 | 22 | ¿Cuántas personas tienen más de 50 años (fecha actual: 2026-02-26)? | `140.134` |
-| 23 | ¿Cuántos registros tienen nombre "Carlos" y viven en "Cali"? | `PENDIENTE` |
-| 24 | ¿Cuántos registros tienen nombre "Ana" y son "Medico"? | `PENDIENTE` |
-| 25 | ¿Cuántos registros tienen profesión "Abogado" y salario > 10,000,000? | `PENDIENTE` |
+| 23 | ¿Cuántos registros tienen nombre "Carlos" y viven en "Cali"? | `187` |
+| 24 | ¿Cuántos registros tienen nombre "Ana" y son "Medico"? | `172` |
+| 25 | ¿Cuántos registros tienen profesión "Abogado" y salario > 10,000,000? | `4.405` |
 | 26 | ¿Cuántos registros tienen ciudad "Barranquilla", activos y nacidos después de 1980? | `PENDIENTE` |
 | 27 | ¿Cuál es la ciudad con más "Ingenieros"? | `PENDIENTE` |
 | 28 | ¿Cuál es la profesión con el salario promedio más alto? | `PENDIENTE` |
