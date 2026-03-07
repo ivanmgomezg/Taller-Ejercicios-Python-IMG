@@ -30,6 +30,19 @@ python soluciones/01.py
 
 > Asegúrate de ejecutar los scripts siempre desde la raíz del proyecto y con el entorno virtual activado.
 
+## Menú Interactivo
+
+El proyecto incluye un menú interactivo para ejecutar los ejercicios fácilmente sin necesidad de ejecutar cada archivo individualmente.
+
+### Ejecutar el menú
+```bash
+python menu.py
+```
+
+### Uso
+- Ingresa el número del ejercicio que deseas ejecutar (01-30)
+- Presiona ENTER para ver el resultado
+- Ingresa `0` para salir
 
 # Taller de Python - Manejo y Limpieza de Datos
 
